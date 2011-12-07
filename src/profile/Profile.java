@@ -5,9 +5,15 @@ import ij.ImagePlus;
 import ij.gui.Roi;
 
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.util.Arrays;
 
 public class Profile {
+    
+    protected ImagePlus img;
+    protected Rectangle selection;
 
     protected double[] arr;
     protected double[] sortedProfile = null;
@@ -23,12 +29,15 @@ public class Profile {
     protected boolean madIsSet = false;
     private boolean meanIsSet = false;
 
-    public Profile(float[] arr) {
+    public Profile(float[] arr, ImagePlus img) {
         this(floatToDoubleArray(arr));
+        this.img = img;
     }
     
     public Profile(ImagePlus img, Rectangle r) {
         this(toProfileArray(img, r));
+        this.img = img;
+        this.selection = r;
     }
     
     public Profile(double[] arr) {
@@ -172,6 +181,21 @@ public class Profile {
                 min = arr[i];
         }
         return min;
+    }
+    
+    public BufferedImage getImageWithSelection() {
+        BufferedImage bimg = img.getBufferedImage();
+        
+        // deep copy buffered image so we dont draw on the original
+        ColorModel cm = bimg.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = bimg.copyData(null);
+        bimg =  new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+        
+        if(selection != null) {
+            bimg.getGraphics().drawRect(selection.x, selection.y, selection.width, selection.height);
+        }
+        return bimg;
     }
     
 }

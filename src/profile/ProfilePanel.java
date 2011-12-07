@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 
@@ -38,12 +39,19 @@ public class ProfilePanel extends JPanel implements IView {
     
     JPanel profilePanel;
     
-    private int currentMad = 1;
-    private double currentPercentile;
+    JOptionPane optionPane;
     
-    private JButton exportProfileButton = new JButton("Export Profile");
+    private int currentMad = 1;
+//    private double currentPercentile;
+    
+    private JButton exportToExcelButton = new JButton("Export Profile to Excel");
+    private JButton exportToTextButton = new JButton("Export Profile to text");
     private JFileChooser fileChooser = new JFileChooser();
+    private ExtensionFileFilter txtFilter = new ExtensionFileFilter("Text file (.txt)", "txt");
+    private ExtensionFileFilter excelFilter = new ExtensionFileFilter("Excel spreadsheet (.xls)","xls");
     private JPanel leftPanel = new JPanel(new SpringLayout());
+
+    private JFreeChart profileChart;
 
     public ProfilePanel(Profile profile, ProfileController controller, ProfileModel model) {
         this.profile = profile;
@@ -52,11 +60,11 @@ public class ProfilePanel extends JPanel implements IView {
         controller.addView(this);
         controller.addModel(model);
         
-        fileChooser.setFileFilter(new ExtensionFileFilter("Excel spreadsheet (.xls)","xls"));
         initComponents();
     }
 
     private void initComponents() {
+        
         setupActionListeners();
         initLeftPanel();
         
@@ -65,13 +73,12 @@ public class ProfilePanel extends JPanel implements IView {
         c.gridx = 0; c.gridy = 0;
         this.add(leftPanel);
         
-        
         setProfilePanel();
         this.add(profilePanel);
     }
 
     private void initLeftPanel() {
-        leftPanel.add(exportProfileButton);
+        leftPanel.add(exportToExcelButton);
         leftPanel.add(new ProfileChartViewPanel(controller, profile));
        
         
@@ -83,20 +90,25 @@ public class ProfilePanel extends JPanel implements IView {
 
     private void setupActionListeners() {
         
-        exportProfileButton.addActionListener(new ActionListener() {
+        exportToExcelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                fileChooser.setFileFilter(excelFilter);
                 int returnVal = fileChooser.showSaveDialog(ProfilePanel.this);
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    
                     String filename = fileChooser.getSelectedFile().toString();
                     if(!filename.endsWith(".xls")) {
                         filename += ".xls";
                     }
                     File file = new File(filename);
+                    
+                    checkIfFileExists(file);
                     try {
-                        QualityControlHelper.exportProfileToExcel(profile, file);
+                        
+                        QualityControlHelper.exportProfileToExcel(profile, currentMad, file, profileChart);
                     } catch (IOException e1) {
-                        IJ.error("Save file failed");
+                        IJ.error("Save file failed: " + e1.getLocalizedMessage());
                         return;
                     } catch (WriteException we) {
                         // TODO Auto-generated catch block
@@ -107,6 +119,28 @@ public class ProfilePanel extends JPanel implements IView {
             }
         });
         
+        exportToTextButton.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               fileChooser.setFileFilter(txtFilter);
+               int returnVal = fileChooser.showSaveDialog(ProfilePanel.this);
+               if(returnVal == JFileChooser.APPROVE_OPTION) {
+                   String filename = fileChooser.getSelectedFile().toString();
+                   if(!filename.endsWith(".txt")) {
+                       filename += ".txt";
+                   }
+                   File file = new File(filename);
+                   
+                   checkIfFileExists(file);
+                   try {
+                       QualityControlHelper.exportProfileToText(profile, currentMad, file);
+                   } catch (IOException e1) {
+                       IJ.error("Save file failed");
+                       return;
+                   } 
+               }
+           }
+        });
     }
 
     @Override
@@ -115,9 +149,9 @@ public class ProfilePanel extends JPanel implements IView {
             currentMad = (Integer) evt.getNewValue();
             setProfilePanel();
         }
-        if(evt.getPropertyName().equals(ProfileController.PROFILE_PERCENTILE_PROPERTY)) {
-            currentPercentile = (Double) evt.getNewValue();
-        }
+//        if(evt.getPropertyName().equals(ProfileController.PROFILE_PERCENTILE_PROPERTY)) {
+//            currentPercentile = (Double) evt.getNewValue();
+//        }
         
     }
 
@@ -126,7 +160,7 @@ public class ProfilePanel extends JPanel implements IView {
             this.remove(profilePanel);
         }
         
-        JFreeChart profileChart = ProfileChartHelper.getProfileChart(profile, "Profile", currentMad);
+        profileChart = ProfileChartHelper.getProfileChart(profile, "Profile", currentMad);
         profilePanel = new ChartPanel(profileChart, 800, 600,
                 800, 600, 800, 600, false,
                 false, false, false, true, true);
@@ -135,5 +169,17 @@ public class ProfilePanel extends JPanel implements IView {
         this.repaint();
         this.revalidate();
         
+    }
+    
+    private void checkIfFileExists(File file) {
+        if(file.exists()) {
+            int res = JOptionPane.showConfirmDialog(null, "File " + file.getName() + " already exists.  Click\n" +
+                                                          "OK to overwrite and save.",
+                                                          "File exists",
+                                                          JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            if(res == JOptionPane.CANCEL_OPTION) {
+                return;
+            }
+        }
     }
 }

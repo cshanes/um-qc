@@ -60,7 +60,13 @@ public class Rectilinear_Profile extends JFrame {
     }
     
     private void initScanSelectionPanel() {
-        Rectangle originalSelection = new Rectangle(5, 5, originalImg.getWidth() - 10, originalImg.getHeight() - 10);
+        int selectionHeight = 50;
+        if(originalImg.getHeight() < 50) {
+            selectionHeight = originalImg.getHeight();
+        }
+        
+        //TODO: make this safer (like height)
+        Rectangle originalSelection = new Rectangle(5, 5, originalImg.getWidth() - 10, selectionHeight);
         
         /* model */
         SelectionModel selection = new SelectionModel();

@@ -24,15 +24,17 @@ import controller.ProfileController;
  */
 public class ProfileChartViewPanel extends JPanel implements IView {
     
+    private static final long serialVersionUID = 717747672086520073L;
+
     Profile profile;
     
     ProfileController controller;
 
     private JSpinner madSpinner;
-    private JSpinner percentileSpinner;
+//    private JSpinner percentileSpinner;
     
     private SpinnerNumberModel madSpinnerModel;
-    private SpinnerNumberModel percentileSpinnerModel;
+//    private SpinnerNumberModel percentileSpinnerModel;
     
     private JLabel madLabel = new JLabel("MAD");
     private JLabel meanLabel = new JLabel("Mean");
@@ -62,10 +64,10 @@ public class ProfileChartViewPanel extends JPanel implements IView {
         madMeanValueField.setEditable(false);
         
         madSpinnerModel = new SpinnerNumberModel(1, 0, 50, 1);
-        percentileSpinnerModel = new SpinnerNumberModel(0.0f, 0.0f, 1.0f, 0.1f);
+//        percentileSpinnerModel = new SpinnerNumberModel(0.0f, 0.0f, 1.0f, 0.1f);
         
         madSpinner = new JSpinner(madSpinnerModel);
-        percentileSpinner = new JSpinner(percentileSpinnerModel);
+//        percentileSpinner = new JSpinner(percentileSpinnerModel);
         
         madSpinner.addChangeListener(new ChangeListener() {
             @Override
@@ -74,22 +76,22 @@ public class ProfileChartViewPanel extends JPanel implements IView {
             }
         });
         
-        percentileSpinner.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                percentileSpinnerStateChanged(e);
-            }
-        });
+//        percentileSpinner.addChangeListener(new ChangeListener() {
+//            @Override
+//            public void stateChanged(ChangeEvent e) {
+//                percentileSpinnerStateChanged(e);
+//            }
+//        });
         
         this.setLayout(new SpringLayout());
         
         JLabel madNumLabel = new JLabel("# MAD", JLabel.TRAILING);
-        JLabel percentileLabel = new JLabel("Percentile", JLabel.TRAILING);
+//        JLabel percentileLabel = new JLabel("Percentile", JLabel.TRAILING);
         madNumLabel.setLabelFor(madSpinner);
-        percentileLabel.setLabelFor(percentileSpinner);
+//        percentileLabel.setLabelFor(percentileSpinner);
         
         this.add(madNumLabel); this.add(madSpinner);
-        this.add(percentileLabel); this.add(percentileSpinner);
+//        this.add(percentileLabel); this.add(percentileSpinner);
         this.add(madLabel); this.add(madValueField);
         this.add(meanLabel); this.add(meanValueField);
         this.add(madMeanLabel); this.add(madMeanValueField);
@@ -106,9 +108,9 @@ public class ProfileChartViewPanel extends JPanel implements IView {
         madMeanValueField.setValue((Double)((Integer)madSpinner.getValue()*profile.getProfileMAD()) / profile.getProfileMean());
     }
 
-    protected void percentileSpinnerStateChanged(ChangeEvent e) {
-        controller.changeProfilePercentile((Double)percentileSpinner.getValue());
-    }
+//    protected void percentileSpinnerStateChanged(ChangeEvent e) {
+//        controller.changeProfilePercentile((Double)percentileSpinner.getValue());
+//    }
 
     @Override
     public void modelPropertyChange(PropertyChangeEvent evt) {
@@ -117,15 +119,14 @@ public class ProfileChartViewPanel extends JPanel implements IView {
             if(!madSpinner.getValue().equals(newValue)) {
                 madSpinner.setValue(newValue);
             }
-            //madMeanValueField.setValue((Double)(newValue*profile.getProfileMAD()) / profile.getProfileMean());
             
         }
-        if(evt.getPropertyName().equals(ProfileController.PROFILE_PERCENTILE_PROPERTY)) {
-            Double newValue = (Double) evt.getNewValue();
-            if(!percentileSpinner.getValue().equals(newValue)) {
-                percentileSpinner.setValue(newValue);
-            }
-        }
+//        if(evt.getPropertyName().equals(ProfileController.PROFILE_PERCENTILE_PROPERTY)) {
+//            Double newValue = (Double) evt.getNewValue();
+//            if(!percentileSpinner.getValue().equals(newValue)) {
+//                percentileSpinner.setValue(newValue);
+//            }
+//        }
 
     }
 

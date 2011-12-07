@@ -34,12 +34,12 @@ import util.ProfileChartHelper;
 
 public class Curvilinear_Profile extends ImageWindow implements MouseListener {
 
+    private static final long serialVersionUID = -8838364843084240460L;
+    
     private static final String SELECT_CIRCLE_DIALOG_STRING = "Select three points along the top of the arc.";
     private static final String SELECT_WIDTH_DIALOG_STRING = "Select the left and right bounds of the intensity profile region of interest.";
     private static final String SELECT_RADII_DIALOG_STRING = "Select two radii (width of profile) of interest.";
     
-    private int imgHeight = 0;
-
     private boolean selectingCirclePoints = false;
     private boolean selectingWidth = false;
     private boolean selectingRadii = false;
@@ -49,7 +49,6 @@ public class Curvilinear_Profile extends ImageWindow implements MouseListener {
 
     private float circleCenterX;
     private float circleCenterY;
-    private float circleRadius;
 
     private Point2D.Float minWidthPoint;
     private Point2D.Float maxWidthPoint;
@@ -79,7 +78,6 @@ public class Curvilinear_Profile extends ImageWindow implements MouseListener {
         
         originalImg = img.duplicate();
         this.img = img;
-        imgHeight = img.getHeight();
         img.getWindow().getCanvas().addMouseListener(this);
         this.profileController = new ProfileController();
         this.profileModel = new ProfileModel();
@@ -134,7 +132,6 @@ public class Curvilinear_Profile extends ImageWindow implements MouseListener {
         float[] yInnerArc = new float[numRays];
         //solve for y values of arc based on xBinsMin
         for(int i = 0; i < xBinsMin.length; i++) {
-//            yInnerArc[i] = imgHeight - (circleCenterY - (float) (Math.sqrt(Math.pow(radiusROIInner, 2) - Math.pow(xBinsMin[i] - circleCenterX, 2))));
             yInnerArc[i] = (circleCenterY + (float) (Math.sqrt(Math.pow(radiusROIInner, 2) - Math.pow(xBinsMin[i] - circleCenterX, 2))));
         }
         
@@ -166,7 +163,14 @@ public class Curvilinear_Profile extends ImageWindow implements MouseListener {
                 if(counter == (width - 1)) {
                     xBinsMax[i] = tempX;
                     yOuterArc[i] = tempY;
-                    g.drawLine((int)xBinsMin[i], (int)yInnerArc[i], (int)xBinsMax[i], (int)yOuterArc[i]);
+                    if(i == 0) {
+                        g.drawLine((int)xBinsMin[i], (int)yInnerArc[i], (int)xBinsMax[i], (int)yOuterArc[i]);
+                    } else if(i > 0 && i < (numRays-1)) {
+                        g.drawLine((int)xBinsMin[i], (int)yInnerArc[i], (int)xBinsMin[i-1], (int)yInnerArc[i-1]);
+                        g.drawLine((int)xBinsMax[i], (int)yOuterArc[i], (int)xBinsMax[i-1], (int)yOuterArc[i-1]);
+                    } else if(i == (numRays-1)) {
+                        g.drawLine((int)xBinsMin[i], (int)yInnerArc[i], (int)xBinsMax[i], (int)yOuterArc[i]);
+                    }
                 }
             }
             
@@ -175,14 +179,8 @@ public class Curvilinear_Profile extends ImageWindow implements MouseListener {
         }
         
         
-//        JFreeChart profileChart = ProfileChartHelper.getProfileChart(new Profile(avgIntensity), "Profile", 1);
-//        JPanel origProfilePanel = new ChartPanel(profileChart, 600, 200,
-//                600, 200, 600, 200, false,
-//                false, false, false, true, true);
-//        JFrame frame = new JFrame();
-//        frame.add(origProfilePanel); frame.pack(); frame.setVisible(true);
         JFrame frame = new JFrame();
-        frame.add(new ProfilePanel(new Profile(avgIntensity), profileController, profileModel));
+        frame.add(new ProfilePanel(new Profile(avgIntensity, img), profileController, profileModel));
         frame.pack(); frame.setVisible(true);
         
     }
@@ -276,8 +274,6 @@ public class Curvilinear_Profile extends ImageWindow implements MouseListener {
         float mb = (p3.y - p2.y) / (p3.x - p2.x);
         circleCenterX = (ma * mb * (p1.y - p3.y) + mb * (p1.x + p2.x) - ma * (p2.x + p3.x)) / (2.0f * (mb - ma));
         circleCenterY = -1.0f / ma * (circleCenterX - (p1.x + p2.x) / 2.0f) + (p1.y + p2.y) / 2.0f;
-        circleRadius = (float) Math.sqrt(Math.pow(p1.x - circleCenterX, 2) + Math.pow(p1.y - circleCenterY, 2));
-        System.out.println("x: " + circleCenterX + " y: " + circleCenterY + " radius: " + circleRadius);
     }
 
     private List<Point2D.Float> orderPoints(float[] xPoints, float[] yPoints, Comparator<Point2D.Float> c) {

@@ -23,6 +23,8 @@ import controller.SelectionController;
  */
 @SuppressWarnings("serial")
 public class ResizableSelection extends JComponent implements IView {
+    
+    private static final int MIN_HEIGHT = 5;
 
     boolean isDepthResizer = false;
     SelectionController controller;
@@ -103,7 +105,7 @@ public class ResizableSelection extends JComponent implements IView {
 
                 switch (cursor) {
                 case Cursor.N_RESIZE_CURSOR:
-                    if (!(h - dy < 50)) {
+                    if (!(h - dy < MIN_HEIGHT)) {
                         if (hitNorthBoundary(y, dy)) {
                             dy = (0 - y);
                             setBounds(x, 0, w, h - dy);
@@ -118,7 +120,7 @@ public class ResizableSelection extends JComponent implements IView {
                     break;
 
                 case Cursor.S_RESIZE_CURSOR:
-                    if (!(h + dy < 50)) {
+                    if (!(h + dy < MIN_HEIGHT)) {
                         if (hitSouthBoundary(y, dy, h)) {
                             dy = maxHeight - h - y;
                             setBounds(x, y, w, maxHeight - y);
@@ -163,7 +165,7 @@ public class ResizableSelection extends JComponent implements IView {
                     break;
 
                 case Cursor.NW_RESIZE_CURSOR:
-                    if (!(w - dx < 50) && !(h - dy < 50)) {
+                    if (!(w - dx < 50) && !(h - dy < MIN_HEIGHT)) {
                         if (hitWestBoundary(x, dx)) { 
                             dx = (0 - x);
                             setBounds(0, y, w - dx, h);
@@ -184,7 +186,7 @@ public class ResizableSelection extends JComponent implements IView {
                     break;
 
                 case Cursor.NE_RESIZE_CURSOR:
-                    if (!(w + dx < 50) && !(h - dy < 50)) {
+                    if (!(w + dx < 50) && !(h - dy < MIN_HEIGHT)) {
                         if(hitEastBoundary(x, dx, w)) {
                             dx = maxWidth - w - x;
                             setBounds(x, y, maxWidth - x, h);
@@ -204,7 +206,7 @@ public class ResizableSelection extends JComponent implements IView {
                     break;
 
                 case Cursor.SW_RESIZE_CURSOR:
-                    if (!(w - dx < 50) && !(h + dy < 50)) {
+                    if (!(w - dx < 50) && !(h + dy < MIN_HEIGHT)) {
                         if(hitWestBoundary(x, dx)) {
                             dx = (0 - x);
                             setBounds(0, y, w - dx, h);
@@ -224,7 +226,7 @@ public class ResizableSelection extends JComponent implements IView {
                     break;
 
                 case Cursor.SE_RESIZE_CURSOR:
-                    if (!(w + dx < 50) && !(h + dy < 50)) {
+                    if (!(w + dx < 50) && !(h + dy < MIN_HEIGHT)) {
                         if(hitEastBoundary(x, dx, w)) {
                             dx = maxWidth - w - x;
                             setBounds(x, y, maxWidth - x, h);
