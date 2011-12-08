@@ -26,23 +26,13 @@
 //import javax.swing.JTabbedPane;
 //import javax.swing.SwingConstants;
 //
-//import profile.SradProfile;
-//
-//import model.SelectionModel;
-//
-//import util.QualityControlHelper;
-//import util.TrimUltrasoundHelper;
 //import view.ResizableSelection;
 //import view.RightClickPopup;
 //import view.ScanSelectionFieldPanel;
 //import controller.SelectionController;
 //
 //@SuppressWarnings("serial")
-///**
-// * This plugin is @deprecated
-// */
-//@Deprecated
-//public class QualityControl extends JFrame {
+//public class Quality_Control extends JFrame {
 //    
 //    private int scanSelectionLocations[] = { SwingConstants.NORTH, SwingConstants.SOUTH,
 //            SwingConstants.WEST, SwingConstants.EAST,
@@ -72,7 +62,7 @@
 //
 //    private ImagePlus medianImg;
 //    
-//    public QualityControl() {
+//    public Quality_Control() {
 //        super("Quality Control");
 //        this.setLayout(new GridBagLayout());
 //        
@@ -131,7 +121,7 @@
 //    
 //    private void initResultsPanel() {
 ////        medianImg.setRoi(depthSelection);
-//        resultsPanel = new ResultsPanel(new SradProfile(medianImg, depthSelection), medianImg.getBufferedImage(), depthSelection);
+//        resultsPanel = new ResultsPanel(new Profile(medianImg, depthSelection), medianImg.getBufferedImage(), depthSelection);
 //    }
 //
 //    private void initDepthSelectionPanel() {
@@ -170,7 +160,7 @@
 //            @Override
 //            public void actionPerformed(ActionEvent e) {
 ////                mediaHnImg.setRoi(selection.toRectangle());
-//                resultsPanel.setProfile(new SradProfile(medianImg, selection.toRectangle()), medianImg.getBufferedImage());
+//                resultsPanel.setProfile(new Profile(medianImg, selection.toRectangle()), medianImg.getBufferedImage());
 //                
 //                mainTabbedPane.setSelectedIndex(resultsPanel.TAB_INDEX);
 //            }

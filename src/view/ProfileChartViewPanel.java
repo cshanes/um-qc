@@ -85,7 +85,7 @@ public class ProfileChartViewPanel extends JPanel implements IView {
         
         this.setLayout(new SpringLayout());
         
-        JLabel madNumLabel = new JLabel("# MAD", JLabel.TRAILING);
+        JLabel madNumLabel = new JLabel("Peak Definition Threshold (MADs)", JLabel.TRAILING);
 //        JLabel percentileLabel = new JLabel("Percentile", JLabel.TRAILING);
         madNumLabel.setLabelFor(madSpinner);
 //        percentileLabel.setLabelFor(percentileSpinner);
@@ -97,7 +97,7 @@ public class ProfileChartViewPanel extends JPanel implements IView {
         this.add(madMeanLabel); this.add(madMeanValueField);
         
         SpringUtilities.makeCompactGrid(this,
-                5, 2, //row, cols
+                4, 2, //row, cols
                 6, 6,             //initX, initY
                 6, 6);            //xPad, yPad
         
@@ -105,7 +105,6 @@ public class ProfileChartViewPanel extends JPanel implements IView {
 
     protected void madSpinnerStateChanged(ChangeEvent e) {
         controller.changeProfileMad((Integer)madSpinner.getValue());
-        madMeanValueField.setValue((Double)((Integer)madSpinner.getValue()*profile.getProfileMAD()) / profile.getProfileMean());
     }
 
 //    protected void percentileSpinnerStateChanged(ChangeEvent e) {

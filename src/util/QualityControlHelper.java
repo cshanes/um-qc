@@ -218,11 +218,11 @@ public class QualityControlHelper {
          */
         sheet = workbook.getSheet(0);
         
-        double mad = profile.getProfileMAD() * currentMad;
+        double mad = profile.getProfileMAD();
         double mean = profile.getProfileMean();
-        addCaption(sheet, 0, row + 3, "MAD * " + currentMad, format);  addNumber(sheet, 1, row + 3, mad, format);
+        addCaption(sheet, 0, row + 3, "MAD", format);  addNumber(sheet, 1, row + 3, mad, format);
         addCaption(sheet, 0, row + 4, "Mean", format); addNumber(sheet, 1, row + 4, mean, format);
-        addCaption(sheet, 0, row + 5, "(MAD * " + currentMad + ")/Mean", format); addNumber(sheet, 1, row + 5, mad / mean, format);
+        addCaption(sheet, 0, row + 5, "MAD/Mean", format); addNumber(sheet, 1, row + 5, mad / mean, format);
         
         BufferedImage bimg = profile.getImageWithSelection();
         File profileImg = bufferedImageToFile(bimg);

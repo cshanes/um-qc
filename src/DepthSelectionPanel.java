@@ -110,12 +110,12 @@ public class DepthSelectionPanel extends JPanel {
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
 //                    img.setRoi();
-                    try {
-                        QualityControlHelper.exportProfileToText(new SradProfile(img, depthSelection.toRectangle()), file);
-                    } catch (IOException e1) {
-                        IJ.error("Save file failed");
-                        return;
-                    }
+//                    try {
+////                        QualityControlHelper.exportProfileToText(new SradProfile(img, depthSelection.toRectangle()), file);
+//                    } catch (IOException e1) {
+//                        IJ.error("Save file failed");
+//                        return;
+//                    }
                 }
             }
         });

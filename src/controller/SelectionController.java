@@ -22,5 +22,5 @@ public class SelectionController extends AbstractSelectionController {
     public void changeSelectionHeight(int newHeight) {
         setModelProperty(SELECTION_HEIGHT_PROPERTY, newHeight);
     }
-    
 }
+

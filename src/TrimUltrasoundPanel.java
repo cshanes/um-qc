@@ -22,9 +22,6 @@ import view.RightClickPopup;
 import view.ScanSelectionFieldPanel;
 
 @SuppressWarnings("serial")
-/**
- * Base TrimUltrasoundPanel class.  This panel is used to select the ROI on an ultrasound image.
- */
 public abstract class TrimUltrasoundPanel extends JPanel {
 
     private Rectangle originalSelection;

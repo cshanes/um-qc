@@ -10,8 +10,6 @@ import org.junit.Test;
 
 import profile.SradProfile;
 
-
-
 public class ProfileTest {
     
     @Test

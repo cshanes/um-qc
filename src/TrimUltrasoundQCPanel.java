@@ -39,7 +39,7 @@ public class TrimUltrasoundQCPanel extends TrimUltrasoundPanel {
             public void actionPerformed(ActionEvent arg0) {
                 ImageStack croppedStack = TrimUltrasoundHelper.createNewCroppedImageStack(img.getImageStack(), selection.toRectangle());
                 ImagePlus newImg = QualityControlHelper.createMedianImageFromStackSelection(croppedStack, selection.toRectangle());
-                dsPanel.setNewImage(newImg);
+//                dsPanel.setNewImage(newImg);
                 
                 tabbedPane.setSelectedIndex(dsPanel.TAB_INDEX);
             }
